@@ -10,6 +10,7 @@
             <h1>Password Generator</h1>
         </div>
         
+        <!-- Normal Auto Password Generator -->
         <div class="card">
             <form method="post">
                 <div class="form-group">
@@ -19,7 +20,20 @@
                 </div>
             </form>
         </div>
-        
+
+        <!-- 🔥 NEW: USER CUSTOM PASSWORD BOX -->
+        <div class="card">
+            <h2>Enter Your Own Custom Password</h2>
+            <form method="post" action="/custom-input">
+                <div class="form-group">
+                    <label for="custom-pass">Type Your Password:</label>
+                    <input type="text" id="custom-pass" name="custom_password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn">Generate Image for This Password</button>
+            </form>
+        </div>
+
         {% if password %}
         <div class="card result">
             <h2>Your Password:</h2>
@@ -27,11 +41,11 @@
             
             <h3>Download Image:</h3>
             <div class="image-container">
-                <img id="generated-image" src="/image?password={{ password }}" alt="Embedded Password Image">
+                <img id="generated-image" src="{{ url_for('get_image', password=password) }}" alt="Embedded Password Image">
                 <p>Scan this image with a steganography tool to extract the password</p>
                 
                 <div class="action-buttons">
-                    <a href="/image?password={{ password }}" download class="btn">
+                    <a href="{{ url_for('get_image', password=password) }}" download class="btn">
                         <i class="fas fa-download"></i> Download Image
                     </a>
                     <button type="button" class="btn" id="share-button">
@@ -39,6 +53,12 @@
                     </button>
                 </div>
             </div>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="card result">
+            <p style="color: red;">{{ error }}</p>
         </div>
         {% endif %}
     </div>
@@ -51,15 +71,22 @@
     </div>
 
     <script>
-        document.getElementById('share-button').addEventListener('click', function() {
-            const imageSrc = document.getElementById('generated-image').src;
-            // Copy image URL to clipboard
-            navigator.clipboard.writeText(imageSrc).then(function() {
-                alert('Image link copied to clipboard!');
-            }, function() {
-                alert('Failed to copy image link. Please try again.');
+        const shareBtn = document.getElementById('share-button');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', function() {
+                const imageEl = document.getElementById('generated-image');
+                if (!imageEl) {
+                    alert('No image to share.');
+                    return;
+                }
+                const imageSrc = imageEl.src;
+                navigator.clipboard.writeText(imageSrc).then(function() {
+                    alert('Image link copied to clipboard!');
+                }, function() {
+                    alert('Failed to copy image link. Please try again.');
+                });
             });
-        });
+        }
     </script>
 </body>
 </html>
