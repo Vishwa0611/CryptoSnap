@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Decode Password</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Decode Password from Image</h1>
+        
+        <div class="card">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="image">Select Image:</label>
+                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <button type="submit" class="btn">Extract Password</button>
+                </div>
+            </form>
+        </div>
+        
+        {% if password %}
+        <div class="card result">
+            <h2>Extracted Password:</h2>
+            <div class="password">{{ password }}</div>
+        </div>
+        {% endif %}
+        
+        {% if error %}
+        <div class="card error">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+        
+        <div style="margin-top: 30px;">
+            <a href="{{ url_for('index') }}" class="btn-link">Go Back to Password Generator</a>
+        </div>
+    </div>
+</body>
+</html>
