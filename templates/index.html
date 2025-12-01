@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>Password Generator</h1>
+        </div>
+        
+        <div class="card">
+            <form method="post">
+                <div class="form-group">
+                    <label for="length">Password Length:</label>
+                    <input type="number" id="length" name="length" min="8" max="100" value="16" required>
+                    <button type="submit" class="btn">Generate Password</button>
+                </div>
+            </form>
+        </div>
+        
+        {% if password %}
+        <div class="card result">
+            <h2>Your Password:</h2>
+            <div class="password">{{ password }}</div>
+            
+            <h3>Download Image:</h3>
+            <div class="image-container">
+                <img id="generated-image" src="/image?password={{ password }}" alt="Embedded Password Image">
+                <p>Scan this image with a steganography tool to extract the password</p>
+                
+                <div class="action-buttons">
+                    <a href="/image?password={{ password }}" download class="btn">
+                        <i class="fas fa-download"></i> Download Image
+                    </a>
+                    <button type="button" class="btn" id="share-button">
+                        <i class="fas fa-share-alt"></i> Copy Image Link
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Decode Password from Image</h1>
+        </div>
+        <a href="{{ url_for('decode') }}" class="btn-link">Go to Decode Page</a>
+    </div>
+
+    <script>
+        document.getElementById('share-button').addEventListener('click', function() {
+            const imageSrc = document.getElementById('generated-image').src;
+            // Copy image URL to clipboard
+            navigator.clipboard.writeText(imageSrc).then(function() {
+                alert('Image link copied to clipboard!');
+            }, function() {
+                alert('Failed to copy image link. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
